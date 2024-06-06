@@ -1,6 +1,7 @@
 import type { HTTPRequest, HTTPResponse, Scheme, SchemeCheck, TokenableScheme, RefreshableScheme, ModuleOptions, Route, AuthState, } from '../../types';
 import { ExpiredAuthSessionError } from '../inc/expired-auth-session-error';
 import type { NuxtApp } from '#app';
+import { navigateTo } from '#app';
 import { isSet, getProp, isRelativeURL, routeMeta, hasOwn } from '../../utils';
 import { Storage } from './storage';
 import { isSamePath, withQuery } from 'ufo';
@@ -494,10 +495,10 @@ export class Auth {
         }
 
         if (process.client && (!router || !isRelativeURL(to))) {
-            return globalThis.location.replace(to)
+            return navigateTo(to, { replace: true });
         }
         else {
-            return this.ctx.$router.push(typeof this.ctx.$localePath === 'function' ? this.ctx.$localePath(to) : to);
+            return navigateTo(typeof this.ctx.$localePath === 'function' ? this.ctx.$localePath(to) : to)
         }
     }
 
